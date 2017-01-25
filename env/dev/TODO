@@ -1,0 +1,26 @@
+ Name Adresse Alter                        
+  Weiblich nämlich                        
+  Männlich                        
+  Vorerkrankungen                        
+  Psyche                        
+  Ich würde den Fragebogen aus dem Buch dort aufnehmen                        
+  Mit automatischer Auswertung
+
+ Dann bräuchte ich die verschiedenen orthomolekularen Substanzen und deren Wirkweise
+  Dosierung
+  Aktuell e und höchst mögliche
+  Pro Patient? Also so Medikament und die Dosierung
+  Na, ich brauch das erstmal als Basis in den Grund Daten
+  Und dann so, dass ich das jeden Patienten zuordnen kann
+  In der persönlichen Dosierung
+  Und ein Feld mit warnhinweisen
+  Zum Beispiel: wenn der Patient Bluthochdruck hat und bei dem Mittel steht bluthochdruck. Dann eine Warnung
+  Aber dass ist total grob, ich brauch das mit Schema und das hab ich mir noch nicht überlegt
+
+  Schau dir doch mal an, wie und was in so einem patientenprogramm alles drin ist
+  Wichtig wäre vielleicht auch, ob der bezahlt hat oder nicht
+  Und eine Spalte, wie das gewirkt hat, für jedes Mittel und allgemein, damit man weiß, warum man die Dosierung wir angepasst hat
+
+  Und irgendwie muss das auch noch mit den darum der Untersuchung und der Folge Termine aktuell sein.... Dass man weiß was wann war
+  Cool wäre zum Beispiel, wenn man eine Liste hat und mit der Maus drüber geht über einen einzelnen Punkt, dann eine Sprechblase kommt, in der die Wirkweise drin steht.... So für den Anfang
+  Oder man sortieren kann, wirkt anregend und dann listet es alles auf, oder wirkt so und so und dann Anzeige

@@ -1,0 +1,126 @@
+{% extends "templates/base.html" %}
+
+{% block content %}
+
+
+
+
+
+<form action="/customer/add" method="POST" role="form">
+    <input name="__anti-forgery-token" type="hidden" value="{{af-token}}"/>
+
+    <div class="row">
+        <div class="form-group col-md-6">
+
+            <div class="form-group">
+                <label>{% localize customer/surname %}</label>
+                <input class="form-control" name="surname" type="text" tabindex="10"
+                       placeholder="{% localize customer/surname %}" autofocus="autofocus" required="required"/>
+            </div>
+
+            <div class="form-group">
+                <label>{% localize customer/birthday %}</label>
+                <input class="form-control" type="date" name="birthday" tabindex="20" required="required" />
+            </div>
+
+            <div class="form-group">
+                <label>{% localize customer/handy %}</label>
+                <input class="form-control" name="handy1" type="text" tabindex="30"
+                       placeholder="{% localize customer/handy %}"/>
+            </div>
+
+            <div class="form-group">
+                <label>{% localize customer/landline %}</label>
+                <input class="form-control" name="landline" type="text" tabindex="40"
+                       placeholder="{% localize customer/landline %}"/>
+            </div>
+
+        </div>
+
+        <div class="col-md-6">
+
+            <div class="form-group">
+                <label>{% localize customer/last-name %}</label>
+                <input class="form-control" name="last-name" type="text" tabindex="15"
+                       placeholder="{% localize customer/last-name %}" required="required"/>
+            </div>
+
+            <div class="form-group">
+                <label>{% localize customer/gender %}</label>
+                <select class="form-control" name="gender" tabindex="25">
+                    <option name="female">{% localize customer/female %}</option>
+                    <option name="male">{% localize customer/male %}</option>
+                    <option name="transgender">{% localize customer/transgender %}</option>
+                    <option name="genderneutral">{% localize customer/genderneutral %}</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>{% localize customer/handy %} 2</label>
+                <input class="form-control" name="handy2" type="text" tabindex="35"
+                       placeholder="{% localize customer/handy %}"/>
+            </div>
+
+            <div class="form-group">
+                <label>{% localize customer/mail %}</label>
+                <input class="form-control" name="mail" type="text" tabindex="45"
+                       placeholder="{% localize customer/mail %}">
+            </div>
+        </div>
+    </div>
+
+    <br>
+
+    <div class="row">
+        <div class="form-group col-md-6">
+
+            <div class="form-group">
+                <label>{% localize address/country %}</label>
+                <input class="form-control" name="country" type="text" tabindex="50"
+                       placeholder="{% localize address/country %}" />
+            </div>
+
+            <div class="form-group">
+                <label>{% localize address/plz %}</label>
+                <input class="form-control" name="plz" type="text" tabindex="60"
+                       placeholder="{% localize address/plz %}" />
+            </div>
+
+            <div class="form-group">
+                <label>{% localize address/street %}</label>
+                <input class="form-control" name="street" type="text" tabindex="70"
+                       placeholder="{% localize address/street %}" />
+            </div>
+
+            <div class="form-group">
+                <input class="btn btn-primary" type="submit" value="{% localize generic/save %}">
+            </div>
+        </div>
+
+        <div class="col-md-6">
+
+
+            <div class="form-group">
+                <label>{% localize address/state %}</label>
+                <input class="form-control" name="state" type="text" tabindex="55"
+                       placeholder="{% localize address/state %}" />
+            </div>
+
+            <div class="form-group">
+                <label>{% localize address/city %}</label>
+                <input class="form-control" name="city" type="text" tabindex="65"
+                       placeholder="{% localize address/city %}" />
+            </div>
+
+            <div class="form-group">
+                <label>{% localize address/number %}</label>
+                <input class="form-control" name="number" type="text" tabindex="75"
+                       placeholder="{% localize address/number %}" />
+            </div>
+    </div>
+
+
+</form>
+
+{% endblock %}
+
