@@ -56,7 +56,8 @@
                  [org.clojure/tools.logging "0.3.1"]
                  [org.postgresql/postgresql "9.4.1212"]
                  [org.clojure/java.jdbc "0.6.2-alpha3"]
-                 [failjure "0.1.4"]]
+                 [failjure "0.1.4"]
+                 [bouncer "1.0.0"]]
 
   :plugins [[lein-cljsbuild "1.1.1"]]
 

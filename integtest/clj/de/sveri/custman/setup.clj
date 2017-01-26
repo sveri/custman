@@ -9,6 +9,7 @@
             [de.sveri.custman.components.config :as c]
             [de.sveri.custman.components.db :refer [new-db]]
             [de.sveri.custman.components.components :refer [prod-system]]
+            [de.sveri.custman.components.selmer :as selm]
             [de.sveri.custman.locale :as l]))
 
 (def db-uri "jdbc:postgresql://localhost:5432/getless-test?user=getless&password=getless")
@@ -33,6 +34,7 @@
 (defn test-system []
   (component/system-map
     :config (c/new-config test-config)
+    :selmer (selm/new-selmer false)
     :db (component/using (new-db) [:config])
     :handler (component/using (new-handler) [:config :db])
     :web (component/using (new-web-server) [:handler :config])))

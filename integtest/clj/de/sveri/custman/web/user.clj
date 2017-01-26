@@ -25,3 +25,4 @@
                      {"#upper_password" "admin"}
                      {"#upper_password" submit})
   (is (.contains (text "body") "Users")))
+;
