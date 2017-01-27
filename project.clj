@@ -56,6 +56,8 @@
                  [org.clojure/tools.logging "0.3.1"]
                  [org.postgresql/postgresql "9.4.1212"]
                  [org.clojure/java.jdbc "0.6.2-alpha3"]
+
+                 [org.clojure/algo.monads "0.1.6"] ; needed for failjure
                  [failjure "0.1.4"]
                  [bouncer "1.0.0"]]
 
@@ -99,7 +101,9 @@
 
                                       [ring/ring-devel "1.5.1"]
                                       [pjstadig/humane-test-output "0.8.1"]
-                                      [kerodon "0.8.0"]]
+
+                                      [fipp "0.6.8"] ; needed for eftest
+                                      [eftest "0.1.2"]]
 
                        :injections   [(require 'pjstadig.humane-test-output)
                                       (pjstadig.humane-test-output/activate!)]}

@@ -10,7 +10,9 @@
             :save              "Speichern"
             :search            "Suchen"
             :add               "Hinzufügen"
-            :cancel            "Abbrechen"}
+            :cancel            "Abbrechen"
+            :mand-field        "Pflichtfeld"
+            :error-saving      "Fehler beim Speichern"}
  :user
            {:email_invalid        "Bitte geben Sie eine gültige E-Mail Adresse an."
             :pass_min_length      "Das Passwort muss mindestens 5 Zeichen enthalten."
@@ -46,21 +48,22 @@
  :contact  {:contact            "Kontakt"
             :content_belongs_to "Der Inhalt gehört zu"}
  :customer {:add           "Kunde hinzufügen"
+            :added         "Kunde hinzugefügt"
             :customers     "Kunden"
             :last-name     "Nachname"
-            :surname       "Vorname"
+            :first-name    "Vorname"
             :birthday      "Geburtstag"
             :gender        "Geschlecht"
             :male          "Männlich"
             :female        "Weiblich"
             :transgender   "Transgender"
             :genderneutral "Geschlechtsneutral"
-            :handy "Handy"
-            :landline "Festnetz"
-            :mail "E-Mail"}
+            :handy         "Handy"
+            :landline      "Festnetz"
+            :mail          "E-Mail"}
  :address  {:country "Land"
-            :state "Staat"
-            :city "Stadt"
-            :street "Strasse"
-            :plz "Postleitzahl"
-            :number "Hausnummer"}}
+            :state   "Staat"
+            :city    "Stadt"
+            :street  "Strasse"
+            :plz     "Postleitzahl"
+            :number  "Hausnummer"}}

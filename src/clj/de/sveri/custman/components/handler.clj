@@ -33,7 +33,7 @@
   (-> (app-handler
         (into [] (concat (when (:registration-allowed? config) [(registration-routes config db)])
                          ;; add your application routes here
-                         [(cc-routes config) (customer-routes)
+                         [(cc-routes config) (customer-routes db)
                           home-routes (user-routes config db) base-routes]))
         ;; add custom middleware here
         :middleware (load-middleware config)
