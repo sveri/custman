@@ -12,7 +12,7 @@
             [de.sveri.custman.components.selmer :as selm]
             [de.sveri.custman.locale :as l]))
 
-(def db-uri "jdbc:postgresql://localhost:5432/getless-test?user=getless&password=getless")
+(def db-uri "jdbc:postgresql://localhost:5432/custman-test?user=custman&password=custman")
 (def db {:connection-uri db-uri})
 
 ; custom config for configuration

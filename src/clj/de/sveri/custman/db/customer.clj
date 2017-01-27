@@ -30,7 +30,7 @@
 
 (def ->gender
   "Convert a unit into a unit_enum enum object"
-  (partial enum->pg-enum "unit_enum"))
+  (partial enum->pg-enum "gender_enum"))
 
 
 (s/fdef insert-customer :args (s/cat :db any? :customer ::customer :users-id ::users-id :localize fn?))

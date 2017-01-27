@@ -8,7 +8,8 @@
             [clojure.string :as str]
             [failjure.core :as f]
             [noir.session :as sess]
-            [de.sveri.custman.db.customer :as db-cust]))
+            [de.sveri.custman.db.customer :as db-cust]
+            [clojure.instant :as inst]))
             ;[clojure.spec :as s]))
 
 (defn index-page []
@@ -64,8 +65,10 @@
 
 
 (defn add [params localize db]
+  (clojure.pprint/pprint params)
   (f/attempt-all [_ (validate-customer params localize)
-                  _ (db-cust/insert-customer db params (sess/get :user-id) localize)]
+                  _ (db-cust/insert-customer db (assoc params :birthday (.getTime (inst/read-instant-date (:birthday params))))
+                                             (sess/get :user-id) localize)]
     (do
       (layout/flash-result (localize [:customer/added]) "alert-success")
       (redirect "/customer"))
