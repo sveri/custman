@@ -17,15 +17,24 @@
 
 (defonce in-memory-store-instance (in-memory-store))
 
+(def locale-to-date-format {"de" "dd.mm.yyyy"
+                            "en" "mm/dd/yyyy"})
+
 (defn add-locale [handler]
   (fn [req]
     (let [accept-language (get-in req [:headers "accept-language"])
           short-languages (or (tempura/parse-http-accept-header accept-language) ["en"])]
-      (sess/put! :locale (first short-languages))
+      ;(sess/put! :locale (first short-languages))
+      ;(sess/put! :date-format (get locale-to-date-format (first short-languages)
+      ;                             (get locale-to-date-format "en")))
       (handler (assoc req :localize (partial tr
                                              {:default-locale :en
                                               :dict           loc/local-dict}
-                                             short-languages))))))
+                                             short-languages)
+                          :locale (get locale-to-date-format (first short-languages)
+                                       (get locale-to-date-format "en"))
+                          :date-format (get locale-to-date-format (first short-languages)
+                                            (get locale-to-date-format "en")))))))
 
 (defn add-req-properties [handler config]
   (fn [req]

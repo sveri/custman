@@ -1,5 +1,14 @@
 {% extends "templates/base.html" %}
 
+
+
+{% block add-css %}
+<link rel="stylesheet" href="/css/bootstrap-datepicker3.standalone.min.css">
+
+
+{% endblock %}
+
+
 {% block content %}
 
 
@@ -20,7 +29,8 @@
 
             <div class="form-group">
                 <label>{% localize customer/birthday %}</label>
-                <input class="form-control" type="date" name="birthday" id="birthday" tabindex="20"  />
+                <input class="form-control" placeholder="{% localize customer/birthday %}" name="birthday" id="birthday"
+                       data-date-format="{{date-format}}" data-date-language="{{language}}" tabindex="20"  />
             </div>
 
             <div class="form-group">
@@ -117,6 +127,8 @@
                 <input class="form-control" name="number" id="number" type="text" tabindex="75"
                        placeholder="{% localize address/number %}" />
             </div>
+        </div>
+
     </div>
 
 
@@ -124,3 +136,9 @@
 
 {% endblock %}
 
+{% block js-bottom %}
+<script src="/js/bootstrap-datepicker.min.js"></script>
+<script src="/js/locales/bootstrap-datepicker.de.min.js"></script>
+<script src="/js/add-customer.js"></script>
+
+{% endblock %}

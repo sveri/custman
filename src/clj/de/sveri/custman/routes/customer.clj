@@ -15,8 +15,8 @@
 (defn index-page []
   (layout/render "customer/index.html"))
 
-(defn add-page []
-  (layout/render "customer/add.html"))
+(defn add-page [{:keys [locale date-format]}]
+  (layout/render "customer/add.html" {:language locale :date-format date-format}))
 
 ;{:last-name "",
 ; :plz "",
@@ -45,10 +45,6 @@
                   (str acc (first error) "<br>"))
                 ""
                 (vals errors))))))
-
-  ;(clojure.pprint/pprint validation-result)
-  ;(when-let [errors (::bc/errors validation-result)]
-  ;  (vals errors)))
 
 
 (defn with-mand-field [to-translate localize]
@@ -81,7 +77,7 @@
 (defn customer-routes [db]
   (routes
     (GET "/customer" [] (index-page))
-    (GET "/customer/add" [] (add-page))
+    (GET "/customer/add" req (add-page req))
     (POST "/customer/add" req (add (:params req) (:localize req) db))))
 
 (def ft [{:last-name '("Pflichtfeld: Nachname"),

@@ -31,8 +31,8 @@
   (quick-fill-submit {"#first-name" "foooo"}
                      {"#last-name" "bar"}
                      {"#birthday" "1990-03-11"}
-                     {"#first-name" submit}))
-  ;(is (find-element {:css "div#flash-message.alert-success"}))
+                     {"#first-name" submit})
+  (is (find-element {:css "div#flash-message.alert-success"})))
   ;(is (.contains (text
   ;                 (find-element {:css "div#flash-message.alert-success"}))
   ;               (s/t [:customer/added]))))
