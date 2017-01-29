@@ -3,7 +3,7 @@
             [clj-webdriver.taxi :refer :all]
             [de.sveri.custman.setup :as s]))
 
-(use-fixtures :each s/browser-setup)
+(use-fixtures :each s/browser-and-db-setup)
 (use-fixtures :once s/server-setup)
 
 (deftest ^:selenium login-invalid-username

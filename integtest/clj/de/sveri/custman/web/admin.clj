@@ -4,7 +4,7 @@
             [de.sveri.custman.setup :as s]
             [de.sveri.custman.helper :as h]))
 
-(use-fixtures :each s/browser-setup)
+(use-fixtures :each s/browser-and-db-setup)
 (use-fixtures :once s/server-setup)
 
 (defn ->user [name]

@@ -1,6 +1,5 @@
 (ns de.sveri.custman.routes.customer
   (:require [compojure.core :refer [routes GET POST]]
-            [de.sveri.custman.layout :as layout]
             [ring.util.response :refer [response redirect]]
             [bouncer.core :as bc]
             [bouncer.validators :as bv]
@@ -8,15 +7,19 @@
             [clojure.string :as str]
             [failjure.core :as f]
             [noir.session :as sess]
+            [clojure.instant :as inst]
+            [clj-time.format :as time-f]
+            [clj-time.coerce :as time-co]
+            [de.sveri.custman.layout :as layout]
             [de.sveri.custman.db.customer :as db-cust]
-            [clojure.instant :as inst]))
+            [de.sveri.custman.locale :as loc]))
             ;[clojure.spec :as s]))
 
 (defn index-page []
   (layout/render "customer/index.html"))
 
-(defn add-page [{:keys [locale date-format]}]
-  (layout/render "customer/add.html" {:language locale :date-format date-format}))
+(defn add-page [{:keys [locale]}]
+  (layout/render "customer/add.html" {:language locale :date-format (loc/get-datepicker-format locale)}))
 
 ;{:last-name "",
 ; :plz "",
@@ -60,11 +63,16 @@
      extract-bouncer-errors)))
 
 
-(defn add [params localize db]
-  (clojure.pprint/pprint params)
+(defn add [{:keys [params localize locale]} db]
+  ;(clojure.pprint/pprint (time-co/to-date (time-f/parse (time-f/formatter date-format) (:birthday params))))
   (f/attempt-all [_ (validate-customer params localize)
-                  _ (db-cust/insert-customer db (assoc params :birthday (.getTime (inst/read-instant-date (:birthday params))))
-                                             (sess/get :user-id) localize)]
+                  _ (db-cust/insert-customer db (assoc params
+                                                  :birthday (time-co/to-long
+                                                              (time-f/parse
+                                                                (time-f/formatter (loc/get-date-java-format locale))
+                                                                (:birthday params))))
+                                             (sess/get :user-id)
+                                             localize)]
     (do
       (layout/flash-result (localize [:customer/added]) "alert-success")
       (redirect "/customer"))
@@ -78,7 +86,7 @@
   (routes
     (GET "/customer" [] (index-page))
     (GET "/customer/add" req (add-page req))
-    (POST "/customer/add" req (add (:params req) (:localize req) db))))
+    (POST "/customer/add" req (add req db))))
 
 (def ft [{:last-name '("Pflichtfeld: Nachname"),
           :birthday '("Pflichtfeld: Geburtstag")}

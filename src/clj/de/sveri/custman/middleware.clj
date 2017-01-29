@@ -17,24 +17,17 @@
 
 (defonce in-memory-store-instance (in-memory-store))
 
-(def locale-to-date-format {"de" "dd.mm.yyyy"
-                            "en" "mm/dd/yyyy"})
-
-(defn add-locale [handler]
+(defn add-locale-and-date-format [handler]
   (fn [req]
     (let [accept-language (get-in req [:headers "accept-language"])
           short-languages (or (tempura/parse-http-accept-header accept-language) ["en"])]
-      ;(sess/put! :locale (first short-languages))
-      ;(sess/put! :date-format (get locale-to-date-format (first short-languages)
-      ;                             (get locale-to-date-format "en")))
       (handler (assoc req :localize (partial tr
                                              {:default-locale :en
                                               :dict           loc/local-dict}
                                              short-languages)
-                          :locale (get locale-to-date-format (first short-languages)
-                                       (get locale-to-date-format "en"))
-                          :date-format (get locale-to-date-format (first short-languages)
-                                            (get locale-to-date-format "en")))))))
+                          :locale (first short-languages))))))
+                          ;:date-format (get loc/locale-to-datepicker-format (first short-languages)
+                          ;                  (get loc/locale-to-datepicker-format "en")))))))
 
 (defn add-req-properties [handler config]
   (fn [req]
@@ -49,7 +42,7 @@
 
 (defn production-middleware [config]
   [#(add-req-properties % config)
-   add-locale
+   add-locale-and-date-format
    #(wrap-access-rules % {:rules auth/rules})
    #(wrap-authorization % auth/auth-backend)
    #(wrap-internal-error % :log (fn [e] (log/error e)))

@@ -41,3 +41,8 @@
                              :last_name  (:last-name customer) :gender (-> (:gender customer) ->gender)})
     (catch Exception e (do (log/error e)
                          (f/fail (localize [:generic/error-saving]))))))
+
+
+(defn get-customer-by-user [db user-id]
+  (j/query db ["select * from customer where users_id = ?" user-id] {:identifiers #(.replace % \_ \-)}))
+
