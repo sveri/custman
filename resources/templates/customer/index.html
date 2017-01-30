@@ -4,4 +4,27 @@
 
 <a href="/customer/add" class="pull-right btn btn-primary">{% localize generic/add %} </a>
 
+<table class="table">
+    <thead>
+    <tr>
+        <td class="col-md-4">&nbsp;</td>
+        <td class="col-md-4">&nbsp;</td>
+        <td class="col-md-4">&nbsp;</td>
+    </tr>
+    </thead>
+
+
+    <tbody>
+    {% for customer in customers %}
+
+    <tr>
+        <td><a href="/customer/edit/{{customer.id}}">{{customer.last-name}}, {{customer.first-name}}</a></td>
+        <td>{{customer.birthday}}</td>
+        <td><a href="/customer/delete/{{customer.id}}" class="btn btn-danger pull-right">{% localize generic/delete %}</a></td>
+    </tr>
+    {% endfor %}
+    </tbody>
+
+</table>
+
 {% endblock %}

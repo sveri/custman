@@ -50,9 +50,9 @@
     (is (= 3 (time-c/month birthday)))
     (is (= 1990 (time-c/year birthday)))))
 
-
-(deftest ^:selenium save-customer-with-address
+(defn add-customer-with-address []
   (h/sign-in {:link "/customer/add"})
+  (select-option "#gender" {:value "male"})
   (quick-fill-submit {"#first-name" "foooo"}
                      {"#last-name" "bar"}
                      {"#birthday" "03/11/1990"}
@@ -66,11 +66,16 @@
                      {"#city" "city"}
                      {"#street" "street"}
                      {"#house-number" "number"}
-                     {"#house-number" submit})
+                     {"#house-number" submit}))
+
+
+(deftest ^:selenium save-customer-with-address
+  (add-customer-with-address)
   (is (find-element {:css "div#flash-message.alert-success"}))
   (let [customer (-> (db-cust/get-customers-by-user s/db 1) first)
         address (-> (db-addr/get-address-by-customer s/db (:id customer)) first)]
     (is (= "foooo" (:first-name customer)))
+    (is (= "male" (:gender customer)))
     (is (= "1234" (:handy1 address)))
     (is (= "2345" (:handy2 address)))
     (is (= "3456" (:landline address)))
@@ -81,3 +86,22 @@
     (is (= "plz" (:plz address)))
     (is (= "street" (:street address)))
     (is (= "number" (:house-number address)))))
+
+
+(deftest ^:selenium list-customers
+  (h/sign-in {:link "/customer/add"})
+  (add-customer-with-address)
+  (h/sign-in {:link "/customer/add"})
+  (add-customer-with-address)
+  (h/sign-in {:link "/customer"})
+  (is (= 2 (count (find-elements {:tag :a :text "bar, foooo"})))))
+
+
+(deftest ^:selenium edit-customer
+  (h/sign-in {:link "/customer/add"})
+  (add-customer-with-address)
+  (click (first (find-elements {:tag :a :text "bar, foooo"})))
+  (is (= 1 (count (find-elements {:tag :input :value "foooo"}))))
+  (is (= 1 (count (find-elements {:tag :input :value "03/11/1990"}))))
+  (is (= "male" (value (first (selected-options "#gender"))))))
+  ;(is (= 1 (count (find-elements {:tag :select :option "male"})))))

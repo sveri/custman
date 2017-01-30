@@ -3,6 +3,7 @@
             [cuerdas.core :as str]
             [clojure.java.jdbc :as j]
             [failjure.core :as f]
+            [clj-time.coerce :as time-coe]
             [clojure.tools.logging :as log])
   (:import (java.sql Timestamp)))
 
@@ -47,4 +48,15 @@
   (mapv #(assoc % :gender (-> % :gender str))
         (j/query db ["select * from customer where users_id = ?" user-id]
                  {:identifiers #(.replace % \_ \-)})))
+
+(defn get-by-id [db customer-id localize]
+  (try
+    (let [cust (first (mapv #(assoc % :gender (-> % :gender str)
+                                      :birthday (-> % :birthday .getTime time-coe/from-long))
+                             (j/query db ["select * from customer where id = ?" customer-id] {:identifiers #(.replace % \_ \-)})))]
+      cust)
+    (catch Exception e (do (log/error e)
+                           (f/fail (localize [:generic/error-loading]))))))
+
+
 

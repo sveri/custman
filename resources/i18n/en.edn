@@ -10,7 +10,8 @@
             :add               "Add"
             :cancel            "Cancel"
             :mand-field        "Mandatory"
-            :error-saving      "Error while saving"}
+            :error-saving      "Error while saving"
+            :error-loading     "Could not load data"}
  :user
            {:email_invalid        "A valid email is required."
             :pass_min_length      "Password must be at least 5 characters."

@@ -15,30 +15,12 @@
             [de.sveri.custman.db.address :as db-addr]
             [de.sveri.custman.locale :as loc]))
 
-;[clojure.spec :as s]))
-
-(defn index-page []
-  (layout/render "customer/index.html"))
+(defn index-page [db]
+  (layout/render "customer/index.html" {:customers (db-cust/get-customers-by-user db (sess/get :user-id))}))
 
 (defn add-page [{:keys [locale]}]
-  (layout/render "customer/add.html" {:language locale :date-format (loc/get-datepicker-format locale)}))
-
-;{:last-name "",
-; :plz "",
-; :number "",
-; :mail "",
-; :city "",
-; :birthday "",
-; :first-name "alpha",
-; :state "",
-; :street "",
-; :handy1 "",
-; :landline "",
-; :handy2 "",
-; :gender "",
-; :__anti-forgery-token
-;            "HM1HiIeVSkHr6QXeizfPON/R3OwXyghoy6JJ0owJ54h+4pBIZ+0/wVxk49a8th8awWrme9hFX5Mnv1Td",
-; :country ""}
+  (layout/render "customer/add.html" {:language locale :date-format (loc/get-datepicker-format locale)
+                                      :form-post-to "/customer/add"}))
 
 
 
@@ -66,7 +48,6 @@
 
 
 (defn add [{:keys [params localize locale]} db]
-  ;(clojure.pprint/pprint (time-co/to-date (time-f/parse (time-f/formatter date-format) (:birthday params))))
   (f/attempt-all [_ (validate-customer params localize)
                   customer (db-cust/insert-customer db (assoc params
                                                               :birthday (time-co/to-long
@@ -77,7 +58,6 @@
                                                        localize)
                   address (db-addr/insert-address db params (first customer) localize)]
                  (do
-                   ;(clojure.pprint/pprint db-res)
                    (layout/flash-result (localize [:customer/added]) "alert-success")
                    (redirect "/customer"))
                  (f/when-failed [e]
@@ -85,31 +65,20 @@
                                 (layout/render "customer/add.html"))))
 
 
+(defn format-birthday-for-edit [customer locale]
+  (assoc customer :birthday (time-f/unparse (time-f/formatter (loc/get-date-java-format locale)) (:birthday customer))))
+
+(defn edit-page [customer-id db {:keys [localize locale]}]
+  (f/attempt-all [customer (db-cust/get-by-id db (Integer/parseInt customer-id) localize)]
+                 (layout/render "customer/add.html" {:customer (format-birthday-for-edit customer locale)
+                                                     :form-post-to "/customer/edit"})
+                 (f/when-failed [e]
+                                (layout/flash-result (:message e) "alert-danger")
+                                (layout/render "customer/index.html"))))
 
 (defn customer-routes [db]
   (routes
-    (GET "/customer" [] (index-page))
+    (GET "/customer" [] (index-page db))
     (GET "/customer/add" req (add-page req))
+    (GET "/customer/edit/:id" [id :as req] (edit-page id db req))
     (POST "/customer/add" req (add req db))))
-
-(def ft [{:last-name '("Pflichtfeld: Nachname"),
-          :birthday  '("Pflichtfeld: Geburtstag")}
-         {:last-name  "",
-          :plz        "",
-          :number     "",
-          :mail       "",
-          :city       "",
-          :birthday   "",
-          :first-name "alpha",
-          :state      "",
-          :bouncer.core/errors
-                      {:last-name '("Pflichtfeld: Nachname"),
-                       :birthday  '("Pflichtfeld: Geburtstag")},
-          :street     "",
-          :handy1     "",
-          :landline   "",
-          :handy2     "",
-          :gender     "",
-          :__anti-forgery-token
-                      "WyDRvN3RBbl0mSHEWZeXCcD8kjzCU0unD3M9VT2m6FuEj5s4U02iMN+DRK/Q7sNQuKPgEeaCcf4Nu14+",
-          :country    ""}])

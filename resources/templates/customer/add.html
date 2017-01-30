@@ -12,10 +12,7 @@
 {% block content %}
 
 
-
-
-
-<form action="/customer/add" method="POST" role="form">
+<form action="{{form-post-to}}" method="POST" role="form">
     <input name="__anti-forgery-token" type="hidden" value="{{af-token}}"/>
 
     <div class="row">
@@ -24,25 +21,25 @@
             <div class="form-group">
                 <label>{% localize customer/first-name %}</label>
                 <input class="form-control" name="first-name" id="first-name" type="text" tabindex="10"
-                       placeholder="{% localize customer/first-name %}" autofocus="autofocus" />
+                       placeholder="{% localize customer/first-name %}" autofocus="autofocus" value="{{customer.first-name}}"/>
             </div>
 
             <div class="form-group">
                 <label>{% localize customer/birthday %}</label>
                 <input class="form-control" placeholder="{% localize customer/birthday %}" name="birthday" id="birthday"
-                       data-date-format="{{date-format}}" data-date-language="{{language}}" tabindex="20"  />
+                       data-date-format="{{date-format}}" data-date-language="{{language}}" tabindex="20"  value="{{customer.birthday}}" />
             </div>
 
             <div class="form-group">
                 <label>{% localize customer/handy %}</label>
                 <input class="form-control" name="handy1" id="handy1" type="text" tabindex="30"
-                       placeholder="{% localize customer/handy %}"/>
+                       placeholder="{% localize customer/handy %}" value="{{customer.handy1}}"/>
             </div>
 
             <div class="form-group">
                 <label>{% localize customer/landline %}</label>
                 <input class="form-control" name="landline" id="landline" type="text" tabindex="40"
-                       placeholder="{% localize customer/landline %}"/>
+                       placeholder="{% localize customer/landline %}" value="{{customer.landline}}"/>
             </div>
 
         </div>
@@ -52,29 +49,29 @@
             <div class="form-group">
                 <label>{% localize customer/last-name %}</label>
                 <input class="form-control" name="last-name" id="last-name" type="text" tabindex="15"
-                       placeholder="{% localize customer/last-name %}" required="required"/>
+                       placeholder="{% localize customer/last-name %}" required="required" value="{{customer.last-name}}"/>
             </div>
 
             <div class="form-group">
                 <label>{% localize customer/gender %}</label>
                 <select class="form-control" name="gender" id="gender" tabindex="25">
-                    <option value="female">{% localize customer/female %}</option>
-                    <option value="male">{% localize customer/male %}</option>
-                    <option value="transgender">{% localize customer/transgender %}</option>
-                    <option value="genderneutral">{% localize customer/genderneutral %}</option>
+                    <option value="female" {% ifequal customer.gender "female" %}selected="selected"{% endifequal %}>{% localize customer/female %}</option>
+                    <option value="male" {% ifequal customer.gender "male" %}selected="selected"{% endifequal %}>{% localize customer/male %}</option>
+                    <option value="transgender" {% ifequal customer.gender "transgender" %}selected="selected"{% endifequal %}>{% localize customer/transgender %}</option>
+                    <option value="genderneutral" {% ifequal customer.gender "genderneutral" %}selected="selected"{% endifequal %}>{% localize customer/genderneutral %}</option>
                 </select>
             </div>
 
             <div class="form-group">
                 <label>{% localize customer/handy %} 2</label>
                 <input class="form-control" name="handy2" id="handy2" type="text" tabindex="35"
-                       placeholder="{% localize customer/handy %}"/>
+                       placeholder="{% localize customer/handy %}" value="{{customer.handy2}}"/>
             </div>
 
             <div class="form-group">
                 <label>{% localize customer/mail %}</label>
                 <input class="form-control" name="email" id="email" type="text" tabindex="45"
-                       placeholder="{% localize customer/mail %}">
+                       placeholder="{% localize customer/mail %}" value="{{customer.email}}">
             </div>
         </div>
     </div>
@@ -87,19 +84,19 @@
             <div class="form-group">
                 <label>{% localize address/country %}</label>
                 <input class="form-control" name="country" id="country" type="text" tabindex="50"
-                       placeholder="{% localize address/country %}" />
+                       placeholder="{% localize address/country %}" value="{{customer.country}}"/>
             </div>
 
             <div class="form-group">
                 <label>{% localize address/plz %}</label>
                 <input class="form-control" name="plz" id="plz" type="text" tabindex="60"
-                       placeholder="{% localize address/plz %}" />
+                       placeholder="{% localize address/plz %}"  value="{{customer.plz}}"/>
             </div>
 
             <div class="form-group">
                 <label>{% localize address/street %}</label>
                 <input class="form-control" name="street" id="street" type="text" tabindex="70"
-                       placeholder="{% localize address/street %}" />
+                       placeholder="{% localize address/street %}"  value="{{customer.street}}"/>
             </div>
 
             <div class="form-group">
@@ -113,19 +110,19 @@
             <div class="form-group">
                 <label>{% localize address/state %}</label>
                 <input class="form-control" name="state" id="state" type="text" tabindex="55"
-                       placeholder="{% localize address/state %}" />
+                       placeholder="{% localize address/state %}" value="{{customer.state}}" />
             </div>
 
             <div class="form-group">
                 <label>{% localize address/city %}</label>
                 <input class="form-control" name="city" id="city" type="text" tabindex="65"
-                       placeholder="{% localize address/city %}" />
+                       placeholder="{% localize address/city %}" value="{{customer.city}}" />
             </div>
 
             <div class="form-group">
                 <label>{% localize address/number %}</label>
                 <input class="form-control" name="house-number" id="house-number" type="text" tabindex="75"
-                       placeholder="{% localize address/number %}" />
+                       placeholder="{% localize address/number %}" value="{{customer.house-number}}" />
             </div>
         </div>
 
