@@ -12,8 +12,10 @@
             [clj-time.coerce :as time-co]
             [de.sveri.custman.layout :as layout]
             [de.sveri.custman.db.customer :as db-cust]
+            [de.sveri.custman.db.address :as db-addr]
             [de.sveri.custman.locale :as loc]))
-            ;[clojure.spec :as s]))
+
+;[clojure.spec :as s]))
 
 (defn index-page []
   (layout/render "customer/index.html"))
@@ -56,29 +58,31 @@
 (defn validate-customer [params localize]
   (let [mand-field (localize [:generic/mand-field])]
     (->
-     (bc/validate params
-                  :last-name [[bv/required :message (with-mand-field :customer/last-name localize)]]
-                  :first-name [[bv/required :message (with-mand-field :customer/first-name localize)]]
-                  :birthday [[bv/required :message (with-mand-field :customer/birthday localize)]])
-     extract-bouncer-errors)))
+      (bc/validate params
+                   :last-name [[bv/required :message (with-mand-field :customer/last-name localize)]]
+                   :first-name [[bv/required :message (with-mand-field :customer/first-name localize)]]
+                   :birthday [[bv/required :message (with-mand-field :customer/birthday localize)]])
+      extract-bouncer-errors)))
 
 
 (defn add [{:keys [params localize locale]} db]
   ;(clojure.pprint/pprint (time-co/to-date (time-f/parse (time-f/formatter date-format) (:birthday params))))
   (f/attempt-all [_ (validate-customer params localize)
-                  _ (db-cust/insert-customer db (assoc params
-                                                  :birthday (time-co/to-long
-                                                              (time-f/parse
-                                                                (time-f/formatter (loc/get-date-java-format locale))
-                                                                (:birthday params))))
-                                             (sess/get :user-id)
-                                             localize)]
-    (do
-      (layout/flash-result (localize [:customer/added]) "alert-success")
-      (redirect "/customer"))
-    (f/when-failed [e]
-      (layout/flash-result (:message e) "alert-danger")
-      (layout/render "customer/add.html"))))
+                  customer (db-cust/insert-customer db (assoc params
+                                                              :birthday (time-co/to-long
+                                                                          (time-f/parse
+                                                                            (time-f/formatter (loc/get-date-java-format locale))
+                                                                            (:birthday params))))
+                                                       (sess/get :user-id)
+                                                       localize)
+                  address (db-addr/insert-address db params (first customer) localize)]
+                 (do
+                   ;(clojure.pprint/pprint db-res)
+                   (layout/flash-result (localize [:customer/added]) "alert-success")
+                   (redirect "/customer"))
+                 (f/when-failed [e]
+                                (layout/flash-result (:message e) "alert-danger")
+                                (layout/render "customer/add.html"))))
 
 
 
@@ -89,23 +93,23 @@
     (POST "/customer/add" req (add req db))))
 
 (def ft [{:last-name '("Pflichtfeld: Nachname"),
-          :birthday '("Pflichtfeld: Geburtstag")}
-         {:last-name "",
-          :plz "",
-          :number "",
-          :mail "",
-          :city "",
-          :birthday "",
+          :birthday  '("Pflichtfeld: Geburtstag")}
+         {:last-name  "",
+          :plz        "",
+          :number     "",
+          :mail       "",
+          :city       "",
+          :birthday   "",
           :first-name "alpha",
-          :state "",
+          :state      "",
           :bouncer.core/errors
-                     {:last-name '("Pflichtfeld: Nachname"),
-                      :birthday '("Pflichtfeld: Geburtstag")},
-          :street "",
-          :handy1 "",
-          :landline "",
-          :handy2 "",
-          :gender "",
+                      {:last-name '("Pflichtfeld: Nachname"),
+                       :birthday  '("Pflichtfeld: Geburtstag")},
+          :street     "",
+          :handy1     "",
+          :landline   "",
+          :handy2     "",
+          :gender     "",
           :__anti-forgery-token
-                     "WyDRvN3RBbl0mSHEWZeXCcD8kjzCU0unD3M9VT2m6FuEj5s4U02iMN+DRK/Q7sNQuKPgEeaCcf4Nu14+",
-          :country ""}])
+                      "WyDRvN3RBbl0mSHEWZeXCcD8kjzCU0unD3M9VT2m6FuEj5s4U02iMN+DRK/Q7sNQuKPgEeaCcf4Nu14+",
+          :country    ""}])
