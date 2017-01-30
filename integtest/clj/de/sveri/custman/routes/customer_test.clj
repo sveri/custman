@@ -103,5 +103,13 @@
   (click (first (find-elements {:tag :a :text "bar, foooo"})))
   (is (= 1 (count (find-elements {:tag :input :value "foooo"}))))
   (is (= 1 (count (find-elements {:tag :input :value "03/11/1990"}))))
-  (is (= "male" (value (first (selected-options "#gender"))))))
+  (is (= "male" (value (first (selected-options "#gender")))))
+  (quick-fill-submit {"#first-name" "f"}
+                     {"#last-name" "baz"}
+                     {"#birthday" "03/12/1990"}
+                     {"#city" "city"}
+                     {"#street" "street"}
+                     {"#house-number" "number"}
+                     {"#house-number" submit}))
+
   ;(is (= 1 (count (find-elements {:tag :select :option "male"})))))

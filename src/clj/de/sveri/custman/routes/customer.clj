@@ -76,9 +76,27 @@
                                 (layout/flash-result (:message e) "alert-danger")
                                 (layout/render "customer/index.html"))))
 
+(defn edit [{:keys [params localize locale]}]
+  (f/attempt-all [_ (validate-customer params localize)
+                  customer (db-cust/insert-customer db (assoc params
+                                                         :birthday (time-co/to-long
+                                                                     (time-f/parse
+                                                                       (time-f/formatter (loc/get-date-java-format locale))
+                                                                       (:birthday params))))
+                                                    (sess/get :user-id)
+                                                    localize)
+                  address (db-addr/insert-address db params (first customer) localize)]
+                 (do
+                   (layout/flash-result (localize [:customer/added]) "alert-success")
+                   (redirect "/customer"))
+                 (f/when-failed [e]
+                                (layout/flash-result (:message e) "alert-danger")
+                                (layout/render "customer/add.html"))))
+
 (defn customer-routes [db]
   (routes
     (GET "/customer" [] (index-page db))
     (GET "/customer/add" req (add-page req))
     (GET "/customer/edit/:id" [id :as req] (edit-page id db req))
-    (POST "/customer/add" req (add req db))))
+    (POST "/customer/add" req (add req db))
+    (POST "/customer/edit" req (edit req db))))
