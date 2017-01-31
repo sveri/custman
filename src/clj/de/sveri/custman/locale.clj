@@ -1,8 +1,9 @@
-(ns de.sveri.custman.locale)
+(ns de.sveri.custman.locale
+  (:require [de.sveri.clojure.commons.files.edn :as comm-edn]))
 
 (def local-dict
-  {:de {:__load-resource "i18n/de.edn"}
-   :en {:__load-resource "i18n/en.edn"}})
+  {:de (comm-edn/from-edn "i18n/de.edn")
+   :en (comm-edn/from-edn "i18n/en.edn")})
 
 
 (def locale-to-datepicker-format {"de" "dd.mm.yyyy"
