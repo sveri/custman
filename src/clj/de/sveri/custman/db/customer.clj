@@ -41,22 +41,33 @@
                              :first_name (:first-name customer)
                              :last_name  (:last-name customer) :gender (-> (:gender customer) ->gender)})
     (catch Exception e (do (log/error e)
+                           (log/error (.getNextException e))
                            (f/fail (localize [:generic/error-saving]))))))
 
 
 (defn get-customers-by-user [db user-id]
-  (mapv #(assoc % :gender (-> % :gender str))
-        (j/query db ["select * from customer where users_id = ?" user-id]
-                 {:identifiers #(.replace % \_ \-)})))
+  (j/query db ["select * from customer where users_id = ?" user-id]
+           {:identifiers #(.replace % \_ \-) :row-fn #(assoc % :gender (-> % :gender str))}))
 
 (defn get-by-id [db customer-id localize]
   (try
-    (let [cust (first (mapv #(assoc % :gender (-> % :gender str)
-                                      :birthday (-> % :birthday .getTime time-coe/from-long))
-                             (j/query db ["select * from customer where id = ?" customer-id] {:identifiers #(.replace % \_ \-)})))]
-      cust)
+    (first (j/query db ["select * from customer where id = ?" customer-id]
+                       {:identifiers #(.replace % \_ \-)
+                        :row-fn #(assoc % :gender (-> % :gender str)
+                                          :birthday (-> % :birthday .getTime time-coe/from-long))}))
+
     (catch Exception e (do (log/error e)
+                           (log/error (.getNextException e))
                            (f/fail (localize [:generic/error-loading]))))))
+
+(defn update-customer [db customer user-id localize]
+  (try
+    (j/update! db :customer {:birthday (new Timestamp (:birthday customer)) :first_name (:first-name customer)
+                             :last_name  (:last-name customer) :gender (-> (:gender customer) ->gender)}
+               ["id = ? and users_id = ?" (Integer/parseInt (:customer-id customer)) user-id])
+    (catch Exception e (do (log/error e)
+                           (log/error (.getNextException e))
+                           (f/fail (localize [:generic/error-saving]))))))
 
 
 

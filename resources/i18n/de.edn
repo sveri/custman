@@ -13,7 +13,8 @@
             :cancel            "Abbrechen"
             :mand-field        "Pflichtfeld"
             :error-saving      "Fehler beim Speichern"
-            :error-loading     "Datensatz konnte nicht geladen werden"}
+            :error-loading     "Datensatz konnte nicht geladen werden"
+            :successful-save   "Änderungen gespeichert"}
  :user
            {:email_invalid        "Bitte geben Sie eine gültige E-Mail Adresse an."
             :pass_min_length      "Das Passwort muss mindestens 5 Zeichen enthalten."

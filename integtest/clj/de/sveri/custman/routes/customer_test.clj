@@ -73,7 +73,7 @@
   (add-customer-with-address)
   (is (find-element {:css "div#flash-message.alert-success"}))
   (let [customer (-> (db-cust/get-customers-by-user s/db 1) first)
-        address (-> (db-addr/get-address-by-customer s/db (:id customer)) first)]
+        address (-> (db-addr/get-address-by-customer s/db (:id customer) s/t) first)]
     (is (= "foooo" (:first-name customer)))
     (is (= "male" (:gender customer)))
     (is (= "1234" (:handy1 address)))
@@ -104,12 +104,34 @@
   (is (= 1 (count (find-elements {:tag :input :value "foooo"}))))
   (is (= 1 (count (find-elements {:tag :input :value "03/11/1990"}))))
   (is (= "male" (value (first (selected-options "#gender")))))
+  (is (= 1 (count (find-elements {:tag :input :value "number"}))))
+  (clear "input#birthday")
   (quick-fill-submit {"#first-name" "f"}
                      {"#last-name" "baz"}
-                     {"#birthday" "03/12/1990"}
+                     {"#birthday" "03/12/1991"}
                      {"#city" "city"}
                      {"#street" "street"}
-                     {"#house-number" "number"}
-                     {"#house-number" submit}))
-
-  ;(is (= 1 (count (find-elements {:tag :select :option "male"})))))
+                     {"#house-number" "new-number"}
+                     {"#house-number" submit})
+  (let [customer (-> (db-cust/get-customers-by-user s/db 1) first)
+        address (-> (db-addr/get-address-by-customer s/db (:id customer) s/t) first)
+        birthday (-> customer
+                     :birthday
+                     .getTime
+                     time-coe/from-long)]
+    (is (= "foooof" (:first-name customer)))
+    (is (= "barbaz" (:last-name customer)))
+    (is (= "male" (:gender customer)))
+    (is (= "1234" (:handy1 address)))
+    (is (= "2345" (:handy2 address)))
+    (is (= "3456" (:landline address)))
+    (is (= "mail@foobar" (:email address)))
+    (is (= "country" (:country address)))
+    (is (= "citycity" (:city address)))
+    (is (= "state" (:state address)))
+    (is (= "plz" (:plz address)))
+    (is (= "streetstreet" (:street address)))
+    (is (= "numbernew-number" (:house-number address)))
+    (is (= 12 (time-c/day birthday)))
+    (is (= 3 (time-c/month birthday)))
+    (is (= 1991 (time-c/year birthday)))))

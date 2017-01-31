@@ -11,7 +11,8 @@
             :cancel            "Cancel"
             :mand-field        "Mandatory"
             :error-saving      "Error while saving"
-            :error-loading     "Could not load data"}
+            :error-loading     "Could not load data"
+            :successful-save   "Changes saved"}
  :user
            {:email_invalid        "A valid email is required."
             :pass_min_length      "Password must be at least 5 characters."

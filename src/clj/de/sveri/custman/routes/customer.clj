@@ -47,13 +47,15 @@
       extract-bouncer-errors)))
 
 
+(defn convert-birthday-for-db [customer locale]
+  (assoc customer :birthday (time-co/to-long
+                              (time-f/parse
+                                (time-f/formatter (loc/get-date-java-format locale))
+                                (:birthday customer)))))
+
 (defn add [{:keys [params localize locale]} db]
   (f/attempt-all [_ (validate-customer params localize)
-                  customer (db-cust/insert-customer db (assoc params
-                                                              :birthday (time-co/to-long
-                                                                          (time-f/parse
-                                                                            (time-f/formatter (loc/get-date-java-format locale))
-                                                                            (:birthday params))))
+                  customer (db-cust/insert-customer db (convert-birthday-for-db params locale)
                                                        (sess/get :user-id)
                                                        localize)
                   address (db-addr/insert-address db params (first customer) localize)]
@@ -62,36 +64,39 @@
                    (redirect "/customer"))
                  (f/when-failed [e]
                                 (layout/flash-result (:message e) "alert-danger")
-                                (layout/render "customer/add.html"))))
+                                (layout/render "customer/add.html" {:language locale :date-format (loc/get-datepicker-format locale)
+                                                                    :customer params :address params
+                                                                    :form-post-to "/customer/add"}))))
 
 
 (defn format-birthday-for-edit [customer locale]
   (assoc customer :birthday (time-f/unparse (time-f/formatter (loc/get-date-java-format locale)) (:birthday customer))))
 
 (defn edit-page [customer-id db {:keys [localize locale]}]
-  (f/attempt-all [customer (db-cust/get-by-id db (Integer/parseInt customer-id) localize)]
+  (f/attempt-all [customer (db-cust/get-by-id db (Integer/parseInt customer-id) localize)
+                  address (first (db-addr/get-address-by-customer db (Integer/parseInt customer-id) localize))]
                  (layout/render "customer/add.html" {:customer (format-birthday-for-edit customer locale)
-                                                     :form-post-to "/customer/edit"})
+                                                     :address address
+                                                     :form-post-to "/customer/edit"
+                                                     :language locale :date-format (loc/get-datepicker-format locale)})
                  (f/when-failed [e]
                                 (layout/flash-result (:message e) "alert-danger")
                                 (layout/render "customer/index.html"))))
 
-(defn edit [{:keys [params localize locale]}]
+(defn edit [{:keys [params localize locale]} db]
   (f/attempt-all [_ (validate-customer params localize)
-                  customer (db-cust/insert-customer db (assoc params
-                                                         :birthday (time-co/to-long
-                                                                     (time-f/parse
-                                                                       (time-f/formatter (loc/get-date-java-format locale))
-                                                                       (:birthday params))))
-                                                    (sess/get :user-id)
-                                                    localize)
-                  address (db-addr/insert-address db params (first customer) localize)]
+                  _ (db-cust/update-customer db (convert-birthday-for-db params locale)
+                                                (sess/get :user-id)
+                                                localize)
+                  _ (db-addr/update-address db params localize)]
                  (do
-                   (layout/flash-result (localize [:customer/added]) "alert-success")
+                   (layout/flash-result (localize [:generic/successful-save]) "alert-success")
                    (redirect "/customer"))
                  (f/when-failed [e]
                                 (layout/flash-result (:message e) "alert-danger")
-                                (layout/render "customer/add.html"))))
+                                (layout/render "customer/add.html" {:customer params
+                                                                    :address params
+                                                                    :form-post-to "/customer/edit"}))))
 
 (defn customer-routes [db]
   (routes

@@ -37,9 +37,26 @@
                             :plz (:plz address) :handy1 (:handy1 address) :handy2 (:handy2 address)
                             :landline (:landline address) :email (:email address)})
     (catch Exception e (do (log/error e)
+                           (log/error (.getNextException e))
                            (f/fail (localize [:generic/error-saving]))))))
 
 
-(defn get-address-by-customer [db customer-id]
-  (j/query db ["select * from address where customer_id = ?" customer-id] {:identifiers #(.replace % \_ \-)}))
+(defn get-address-by-customer [db customer-id localize]
+  (try
+    (j/query db ["select * from address where customer_id = ?" customer-id] {:identifiers #(.replace % \_ \-)})
+    (catch Exception e (do (log/error e)
+                           (log/error (.getNextException e))
+                           (f/fail (localize [:generic/error-loading]))))))
+
+(defn update-address [db address localize]
+  (try
+    (j/update! db :address {:country (:country address) :state (:state address)
+                            :city (:city address) :street (:street address) :house_number (:house-number address)
+                            :plz (:plz address) :handy1 (:handy1 address) :handy2 (:handy2 address)
+                            :landline (:landline address) :email (:email address)}
+               ["id = ? and customer_id = ?" (Integer/parseInt (:address-id address)) (Integer/parseInt (:customer-id address))])
+    (catch Exception e (do (log/error e)
+                           (log/error (.getNextException e))
+                           (f/fail (localize [:generic/error-saving]))))))
+
 
