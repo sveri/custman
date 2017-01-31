@@ -9,7 +9,7 @@ is_active BOOLEAN DEFAULT FALSE NOT NULL,
 pass character varying(200)
 );
 
-ALTER TABLE users OWNER TO custman;
+ALTER TABLE users OWNER TO patman;
 
 ALTER TABLE ONLY users
     ADD CONSTRAINT uk_6dotkott2kjsp8vw4d0m25fb7 UNIQUE (email);

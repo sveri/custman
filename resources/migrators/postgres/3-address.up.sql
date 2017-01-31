@@ -11,7 +11,7 @@ users_id bigint,
 customer_id bigint
 );
 
-ALTER TABLE address OWNER TO custman;
+ALTER TABLE address OWNER TO patman;
 
 CREATE INDEX address_users_index ON address USING btree (users_id);
 
