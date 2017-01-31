@@ -32,7 +32,7 @@
           port (get-in config [:config :port] 3000)
           server (if (= (:env config) :dev)
                    (web/run-dmc handler {:port port})
-                   (web/run handler {:port port}))]
+                   (web/run handler {:port port :virtual-host ["sveri.de custman.sveri.de patman.sveri.de"]}))]
       (assoc component :server server)))
   (stop [component]
     (let [server (:server component)]
