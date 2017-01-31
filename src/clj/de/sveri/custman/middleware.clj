@@ -8,14 +8,11 @@
             [ring.middleware.anti-forgery :refer [wrap-anti-forgery]]
             [noir.session :as sess]
             [de.sveri.clojure.commons.middleware.util :refer [wrap-trimmings]]
-            [clojure-miniprofiler :refer [wrap-miniprofiler in-memory-store]]
             [ring.middleware.transit :refer [wrap-transit-response]]
             [ring.middleware.reload :refer [wrap-reload]]
             [de.sveri.custman.locale :as loc]
             [de.sveri.custman.service.auth :refer [auth-backend]]
             [de.sveri.custman.service.auth :as auth]))
-
-(defonce in-memory-store-instance (in-memory-store))
 
 (defn add-locale-and-date-format [handler]
   (fn [req]
@@ -36,8 +33,7 @@
     (handler req)))
 
 (def development-middleware
-  [#(wrap-miniprofiler % {:store in-memory-store-instance})
-   #(prone/wrap-exceptions % {:app-namespaces ['de.sveri.custman]})
+  [#(prone/wrap-exceptions % {:app-namespaces ['de.sveri.custman]})
    wrap-reload])
 
 (defn production-middleware [config]
