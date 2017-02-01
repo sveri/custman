@@ -10,7 +10,7 @@
   "destroy will be called when your application
    shuts down, put any clean up code here"
   []
-  (log/info "custman is shutting down...")
+  (log/info "patman is shutting down...")
   (sched/shutdown! session/cleanup-job)
   (log/info "shutdown complete!"))
 
@@ -22,7 +22,7 @@
   [config]
   ;;start the expired session cleanup job
   (sched/start! session/cleanup-job)
-  (log/info "\n-=[ custman started successfully"
+  (log/info "\n-=[ patman started successfully"
                (when (= (:env config) :dev) "using the development profile") "]=-"))
 
 (defrecord WebServer [handler config]

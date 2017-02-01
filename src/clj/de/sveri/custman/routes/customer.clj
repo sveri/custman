@@ -13,7 +13,8 @@
             [de.sveri.custman.layout :as layout]
             [de.sveri.custman.db.customer :as db-cust]
             [de.sveri.custman.db.address :as db-addr]
-            [de.sveri.custman.locale :as loc]))
+            [de.sveri.custman.locale :as loc]
+            [de.sveri.custman.service.questionnaire :as quest]))
 
 (defn index-page [db]
   (layout/render "customer/index.html" {:customers (db-cust/get-customers-by-user db (sess/get :user-id))}))
@@ -98,10 +99,21 @@
                                                                     :address params
                                                                     :form-post-to "/customer/edit"}))))
 
+
+(defn ross-questions-page []
+  (layout/render "customer/ross-questions.html" {:questions (:questions quest/ross-questions)}))
+
+(defn ross-questions [{:keys [params localize]} db]
+  (clojure.pprint/pprint params)
+  (redirect "/customer/ross-questions"))
+
+
 (defn customer-routes [db]
   (routes
     (GET "/customer" [] (index-page db))
     (GET "/customer/add" req (add-page req))
     (GET "/customer/edit/:id" [id :as req] (edit-page id db req))
+    (GET "/customer/ross-questions" [] (ross-questions-page))
     (POST "/customer/add" req (add req db))
-    (POST "/customer/edit" req (edit req db))))
+    (POST "/customer/edit" req (edit req db))
+    (POST "/customer/ross-questions" req (ross-questions req db))))

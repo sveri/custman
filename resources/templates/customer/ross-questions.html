@@ -1,0 +1,28 @@
+{% extends "templates/base.html" %}
+
+{% block content %}
+
+<h3>{% localize ross-questions/name %}</h3>
+<br />
+
+<form action="/customer/ross-questions" method="POST" role="form">
+    <input name="__anti-forgery-token" type="hidden" value="{{af-token}}"/>
+    <input name="customer-id" type="hidden" value="{{customer.id}}"/>
+
+    {% for question in questions %}
+
+    <div class="form-group">
+        <input name="{{question.name}}" type="checkbox" /> {{question.text}}
+    </div>
+
+    {% endfor %}
+
+    <br />
+
+    <div class="form-group">
+        <input class="btn btn-primary" type="submit" id=submit" value="{% localize generic/save %}">
+    </div>
+
+</form>
+
+{% endblock %}
